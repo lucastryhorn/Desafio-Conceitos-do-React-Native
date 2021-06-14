@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 import { Header } from "../components/Header";
 import { MyTasksList } from "../components/MyTasksList";
@@ -12,6 +13,11 @@ interface Task {
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  function handleDarkMode() {
+    setIsDarkMode((oldState) => !oldState);
+  }
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task if it's not empty
@@ -49,16 +55,27 @@ export function Home() {
   }
 
   return (
-    <>
-      <Header />
+    <View style={[styles.container, isDarkMode && styles.containerDarkMode]}>
+      <Header isDarkMode={isDarkMode} onPress={handleDarkMode} />
 
-      <TodoInput addTask={handleAddTask} />
+      <TodoInput addTask={handleAddTask} isDarkMode={isDarkMode} />
 
       <MyTasksList
         tasks={tasks}
         onPress={handleMarkTaskAsDone}
         onLongPress={handleRemoveTask}
+        isDarkMode={isDarkMode}
       />
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF",
+  },
+  containerDarkMode: {
+    backgroundColor: "#1F1F1F",
+  },
+});

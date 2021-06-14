@@ -5,10 +5,15 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatListProps,
 } from "react-native";
 
-function FlatListHeaderComponent() {
+interface DarkMode {
+  isDarkMode: boolean;
+}
+
+function FlatListHeaderComponent({ isDarkMode }: DarkMode) {
+  const styles = stylesFn(isDarkMode);
+
   return (
     <View>
       <Text style={styles.header}>Minhas tasks</Text>
@@ -16,7 +21,7 @@ function FlatListHeaderComponent() {
   );
 }
 
-interface MyTasksListProps {
+interface MyTasksListProps extends DarkMode {
   tasks: {
     id: number;
     title: string;
@@ -26,7 +31,14 @@ interface MyTasksListProps {
   onLongPress: (id: number) => void;
 }
 
-export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
+export function MyTasksList({
+  tasks,
+  onLongPress,
+  onPress,
+  isDarkMode,
+}: MyTasksListProps) {
+  const styles = stylesFn(isDarkMode);
+
   return (
     <FlatList
       data={tasks}
@@ -55,7 +67,7 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
           </TouchableOpacity>
         );
       }}
-      ListHeaderComponent={<FlatListHeaderComponent />}
+      ListHeaderComponent={<FlatListHeaderComponent isDarkMode={isDarkMode} />}
       ListHeaderComponentStyle={{
         marginBottom: 20,
       }}
@@ -67,51 +79,52 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    color: "#3D3D4D",
-    fontSize: 24,
-    fontFamily: "Poppins-SemiBold",
-  },
-  taskButton: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    marginBottom: 4,
-    borderRadius: 4,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  taskMarker: {
-    height: 16,
-    width: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#3D3D4D",
-    marginRight: 10,
-  },
-  taskText: {
-    color: "#3D3D4D",
-  },
-  taskButtonDone: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    marginBottom: 4,
-    borderRadius: 4,
-    backgroundColor: "rgba(25, 61, 223, 0.1)",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  taskMarkerDone: {
-    height: 16,
-    width: 16,
-    borderRadius: 8,
-    backgroundColor: "#273FAD",
-    marginRight: 10,
-  },
-  taskTextDone: {
-    color: "#A09CB1",
-    textDecorationLine: "line-through",
-  },
-});
+const stylesFn = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    header: {
+      color: isDarkMode ? "#FF79C6" : "#3D3D4D",
+      fontSize: 24,
+      fontFamily: "Poppins-SemiBold",
+    },
+    taskButton: {
+      flex: 1,
+      paddingHorizontal: 10,
+      paddingVertical: 12,
+      marginBottom: 4,
+      borderRadius: 4,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    taskMarker: {
+      height: 16,
+      width: 16,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: "#3D3D4D",
+      marginRight: 10,
+    },
+    taskText: {
+      color: isDarkMode ? "#FF79C6" : "#3D3D4D",
+    },
+    taskButtonDone: {
+      flex: 1,
+      paddingHorizontal: 10,
+      paddingVertical: 12,
+      marginBottom: 4,
+      borderRadius: 4,
+      backgroundColor: isDarkMode ? "#FF79C610" : "rgba(25, 61, 223, 0.1)",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    taskMarkerDone: {
+      height: 16,
+      width: 16,
+      borderRadius: 8,
+      backgroundColor: isDarkMode ? "#FF79C6" : "#273FAD",
+      marginRight: 10,
+    },
+    taskTextDone: {
+      color: "#A09CB1",
+      textDecorationLine: "line-through",
+    },
+  });
